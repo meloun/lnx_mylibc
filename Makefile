@@ -16,12 +16,6 @@ include $(TOP_DIR)/config/config.make
 
 OFLAGS :=-static
 
-#LIBCGI := ../cgi/libcgi
-LIBS2E := libs2e
-CFLAGS += -I$(LIBCGI) -I$(LIBS2E)
-OFLAGS += -L$(LIBS2E) -ls2e
-LIBS += $(LIBS2E)/libs2e.a
-
 ifneq ($(CONFIG_IPV6),)
 CFLAGS	+=-DINET6
 endif
@@ -30,24 +24,16 @@ INS_DIR := $(TOP_DIR)/romfs
 
 ##
 
-HDRS = io_common.h pm_common.h
-OBJS = io_common.o pm_common.o
-EXES = io_common pm_common
+HDRS = s2e_common.h io_common.h pm_common.h
+OBJS = s2e_common.o io_common.o pm_common.o
 
 ##
 
-all:  $(EXES)
-
-$(EXES):  $(OBJS) $(HDRS) $(LIBS)
-	$(CC) -o $(EXES) $(OBJS) $(OFLAGS) $(LDFLAGS) $(EXTRALIBS) $(LDLIBS)
+all:  $(OBJS)
 
 .c.o:
 	$(CC) $(CFLAGS) -c $< 
 
 clean:
 	-@rm -f $(EXES) $(EXES).gdb $(OBJS)
-
-
-io_common.o		: io_common.c		$(HDRS)
-#tty.o			: tty.c			$(HDRS)
 
